@@ -1,0 +1,19 @@
+ID,Poll Character,Enabled,X Position (in),Y Position (in),Z Position (in),Rotation (deg)
+ultra1,u1,0,4,0,4,0
+ultra2,u2,0,4,4,4,45
+ultra3,u3,1,0,4,4,90
+ultra4,u4,0,-4,4,4,135
+ultra5,u5,0,-4,0,4,180
+ultra6,u6,0,-4,-4,4,225
+ultra7,u7,0,0,-4,4,270
+ultra8,u8,0,4,-4,4,315
+IR1,i1,0,3,0,1,0
+IR2,i2,1,0,3,1,0
+IR3,i3,0,-3,0,1,0
+IR4,i4,0,0,-3,1,0
+compass1,c1,1,0,0,6,0
+odom1,o1,1,5,0,1,90
+odom2,o2,1,-5,0,1,90
+odom3,o3,0,0,5,1,0
+odom4,o4,0,0,-5,1,0
+gyro1,g1,1,0,0,6,0

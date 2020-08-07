@@ -13,7 +13,7 @@ bot_perim = import_bot;
 bot2 = rotation(bot_perim, 15);
 
 % Import Sensor Loadout and Positions
-
+sensor = import_sensor;
 
 % Testing plots
 figure(1)
