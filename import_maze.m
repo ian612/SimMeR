@@ -45,7 +45,5 @@ if plotmap
     plot(maze_xy(:,1), maze_xy(:,2), 'k')
 end
 
-disp('yay')
-
 end
 
