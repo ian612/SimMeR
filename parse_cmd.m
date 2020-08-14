@@ -19,8 +19,8 @@ function [cmd_type, cmd_id, id_num] = parse_cmd(cmd,sensor,drive)
 %   right - move right
 %   rot   - rotate
 %   
-%   The output id_num is the sensor number to poll. For drive commands
-%   this will be set to 1.
+%   The output id_num is the sensor number to poll (corresponds to the row 
+%   number in the 'sensor' or 'drive' variable.
 
 if ~exist('cmd','var')
     cmd = 'w1-1';
@@ -28,7 +28,7 @@ end
 
 % Strip values from command
 cmd_char = cmd(1);
-id_num = str2double(cmd(2));
+id_num = 0;
 
 % Set cmd_type to default value of 0, in case it isn't found
 cmd_type = 0;
@@ -40,6 +40,7 @@ for ct = 1:size(sensor.char,1)
         if id_num == str2double(sensor.char{ct}(2))
             cmd_type = 1;
             cmd_id = sensor.id{ct}(1:end-1);
+            id_num = ct;
             break
         end
     end
@@ -51,13 +52,11 @@ if ~cmd_type
         if cmd_char == drive.char{ct}(1)
             cmd_type = 2;
             cmd_id = drive.id{ct};
+            id_num = ct;
             break
         end
     end
 end
 
-cmd_type
-cmd_id
-id_num
 end
 

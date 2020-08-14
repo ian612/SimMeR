@@ -32,14 +32,27 @@ drive = import_drive;
 ct = 1;
 while ct
     % Listen for command from student algorithm
-    cmd = 'w2-1';
+    cmd = 'g1-1';
     
     % Parse command
     [cmd_type, cmd_id, id_num] = parse_cmd(cmd, sensor, drive);
     
     if cmd_type == 1
-        
-        
+        sensor_pos = [sensor.x(id_num), sensor.y(id_num), sensor.z(id_num), sensor.rot(id_num)];
+        switch cmd_id
+            case 'ultra'
+                reply = get_ultrasonic(bot_center, bot_rot, sensor_pos);
+            case 'ir'
+                reply = get_ir(bot_center, bot_rot, sensor_pos);
+            case 'comp'
+                reply = get_compass(bot_center, bot_rot, sensor_pos);
+            case 'odom'
+                reply = get_odometer(bot_center, bot_rot, sensor_pos);
+            case 'gyro'
+                reply = get_gyroscope(bot_center, bot_rot, sensor_pos);
+            otherwise
+                error(strcat('cmd_id "', cmd_id,'" not recognized.'))
+        end
         
     elseif cmd_type == 2
         % Plan the robot's travel path based on the drive command and error
