@@ -9,12 +9,12 @@ checker = import_checker;
 
 % Build Robot
 bot_center = [6,42];
-bot_rot = 30;
+bot_rot = -30;
 bot_perim = import_bot;
 bot_pos = pos_update(bot_center, bot_rot, bot_perim);
 
 % Import Sensor Loadout and Positions
-sensor = import_sensor;
+sensor = import_sensor; 
 
 % Import Drive information
 drive = import_drive;
@@ -32,7 +32,7 @@ drive = import_drive;
 ct = 1;
 while ct
     % Listen for command from student algorithm
-    cmd = 'g1-1';
+    cmd = 'u1-1';
     
     % Parse command
     [cmd_type, cmd_id, id_num] = parse_cmd(cmd, sensor, drive);
@@ -41,7 +41,7 @@ while ct
         sensor_pos = [sensor.x(id_num), sensor.y(id_num), sensor.z(id_num), sensor.rot(id_num)];
         switch cmd_id
             case 'ultra'
-                reply = get_ultrasonic(bot_center, bot_rot, sensor_pos);
+                reply = get_ultrasonic(bot_center, bot_rot, sensor_pos, maze);
             case 'ir'
                 reply = get_ir(bot_center, bot_rot, sensor_pos);
             case 'comp'

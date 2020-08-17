@@ -27,7 +27,7 @@ if ~exist('cmd','var')
 end
 
 % Strip values from command
-cmd_char = cmd(1);
+cmd_char = cmd(1:2);
 id_num = 0;
 
 % Set cmd_type to default value of 0, in case it isn't found
@@ -36,13 +36,14 @@ cmd_id = 'none';
 
 % Check if this is a sensor request
 for ct = 1:size(sensor.char,1)
-    if cmd_char == sensor.char{ct}(1)
-        if id_num == str2double(sensor.char{ct}(2))
+    if strcmp(cmd_char,sensor.char{ct})
+    %if cmd_char == sensor.char{ct}(1)
+        %if id_num == str2double(sensor.char{ct}(2))
             cmd_type = 1;
             cmd_id = sensor.id{ct}(1:end-1);
             id_num = ct;
             break
-        end
+        %end
     end
 end
 

@@ -4,7 +4,7 @@ function [vR] = rotation(v, th)
 %   the rotated output vector
 
 % 2D rotation matrix
-R = [cosd(th), -sind(th); sind(th), cosd(th)];
+R = [cosd(th), sind(th); -sind(th), cosd(th)];
 
 vR = v*R;
 
