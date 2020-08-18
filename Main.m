@@ -19,11 +19,11 @@ sensor = import_sensor;
 % Import Drive information
 drive = import_drive;
 
-% Import sensor error profiles
-% ----------------------------
-
 % Initialize integration-based sensor values
 % ------------------------------------------
+
+% Shuffle random number generator seed or set it statically
+rng('shuffle') % Comment this line to use consistent error generation
 
 % Send go signal to student algorithm
 % -----------------------------------

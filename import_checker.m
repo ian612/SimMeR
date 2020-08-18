@@ -43,8 +43,5 @@ if plotmap
     plot(checker_xy(:,1), checker_xy(:,2), 'k')
 end
 
-% shuffle the Matlab random number generator
-rng('shuffle')
-
 end
 
