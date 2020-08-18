@@ -1,6 +1,7 @@
 function [sensor] = import_sensor(bot_perim, fname, plotmap)
 %IMPORT_SENSOR Imports the sensor loadout
-%   This sensor 
+%   This function reads the sensor csv file and loads the provided
+%   information into the program. Data is stored in a 1x1 structure called
 
 if ~exist('bot_perim','var')
     bot_perim = [-6, -6; ...
