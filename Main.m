@@ -32,7 +32,7 @@ drive = import_drive;
 ct = 1;
 while ct
     % Listen for command from student algorithm
-    cmd = 'c1-1';
+    cmd = 'u1-1';
     
     % Parse command
     [cmd_type, cmd_id, id_num] = parse_cmd(cmd, sensor, drive);

@@ -5,7 +5,7 @@ function [range] = get_ultrasonic(bot_center, bot_rot, sensor_pos, maze, plotmap
 % Constants
 ray_length = 108; % length of the ray to draw/check for intersection with walls
 fov = 10; % Field of view of the sensor, to be implemented later
-err = 1; % noise value for sensor in percent
+err_pct = 2; % noise value for sensor in percent
 
 if ~exist('plotmap','var')
     plotmap = 0;
@@ -29,7 +29,8 @@ ray = [origin; pos_update(origin, rot, [ray_length,0])];
 range_pure = sqrt((origin(1) - x(1))^2 + (origin(2) - y(1))^2);
 
 % Calculate the error and add it to the measurement
-range = range_pure;
+range_err = randn * err_pct/100 * range_pure;
+range = range_pure + range_err;
 
 if plotmap
     figure()
