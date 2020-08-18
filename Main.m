@@ -8,7 +8,7 @@ maze = import_maze;
 checker = import_checker;
 
 % Build Robot
-bot_center = [6.5,43.5];
+bot_center = [9.5,40.5];
 bot_rot = -30;
 bot_perim = import_bot;
 bot_pos = pos_update(bot_center, bot_rot, bot_perim);
@@ -23,7 +23,8 @@ drive = import_drive;
 % ------------------------------------------
 
 % Shuffle random number generator seed or set it statically
-rng('shuffle') % Comment this line to use consistent error generation
+rng('shuffle') % Use shuffled pseudorandom error generation
+% rng(0) % Use consistent pseudorandom error generation
 
 % Send go signal to student algorithm
 % -----------------------------------
@@ -32,7 +33,7 @@ rng('shuffle') % Comment this line to use consistent error generation
 ct = 1;
 while ct
     % Listen for command from student algorithm
-    cmd = 'u1-1';
+    cmd = 'i1-1';
     
     % Parse command
     [cmd_type, cmd_id, id_num] = parse_cmd(cmd, sensor, drive);

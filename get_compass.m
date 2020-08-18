@@ -12,7 +12,7 @@ origin = pos_update(bot_center, bot_rot, sensor_pos(1:2));
 direction_pure = sensor_pos(4) + bot_rot;
 
 % Calculate the error and add it to the measurement
-direction = direction_pure;
+direction = add_error(direction_pure, pct_error);
 
 end
 

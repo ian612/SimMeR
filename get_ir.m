@@ -5,7 +5,7 @@ function [pct_black] = get_ir(bot_center, bot_rot, sensor_pos, checker, plotmap)
 % Constants
 fov = 40; % sensor full-width field of view
 num_pts = 121; % number of points in IR sensor view bounding circle
-
+pct_error = 0.05; % noise value for sensor (from 0 to 1)
 
 if ~exist('plotmap','var')
     plotmap = 0;
@@ -29,16 +29,16 @@ in = inpolygon(pts(:,1), pts(:,2), circle(:,1), circle(:,2));
 pts(~in,:) = [];
 
 % Calculate all the points inside the checkerboard
-pts = pts + origin.*ones(size(pts));
+pts = pts + origin.*ones(size(pts)); % place all points to check in correct absolute position
 in = inpolygon(pts(:,1), pts(:,2), checker(:,1), checker(:,2));
-pts_in = pts;
-pts_in(~in,:) = [];
+pts_in = pts;       % copy the list of points to check
+pts_in(~in,:) = []; % remove points that are not within a checkerboard square
 
 % Determine the percentage of points that are located in black squares
-pct_black_pure = size(pts,1)/num_pts;
+pct_black_pure = size(pts_in,1)/size(pts,1);
 
 % Calculate the error and add it to the measurement
-pct_black = pct_black_pure;
+pct_black = add_error(pct_black_pure, pct_error, [0,1]);
 
 if plotmap
     figure(1)
