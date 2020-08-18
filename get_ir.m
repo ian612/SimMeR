@@ -2,6 +2,11 @@ function [pct_black] = get_ir(bot_center, bot_rot, sensor_pos, checker, plotmap)
 %GET_IR Returns the output of a simulated IR sensor
 %   Detailed explanation goes here
 
+% Constants
+fov = 40; % sensor full-width field of view
+num_pts = 121; % number of points in IR sensor view bounding circle
+
+
 if ~exist('plotmap','var')
     plotmap = 0;
 end
@@ -10,14 +15,12 @@ end
 origin = pos_update(bot_center, bot_rot, sensor_pos(1:2));
 
 % Determine the sensor view area based on the z-position
-fov = 40; % sensor full-width field of view
 r = sensor_pos(3)*tand(fov/2); % Sensor fov radius on the ground
 
 % Generate a grid of points to test the checkerboard pattern with
 [x, y] = meshgrid(linspace(-r,r,13), linspace(-r,r,13));
 pts = [x(:), y(:)];
 
-num_pts = 121;
 th = linspace(0,360,num_pts)';
 circle = [r.*cosd(th), r.*sind(th)];
 

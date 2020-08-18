@@ -32,7 +32,7 @@ drive = import_drive;
 ct = 1;
 while ct
     % Listen for command from student algorithm
-    cmd = 'i1-1';
+    cmd = 'c1-1';
     
     % Parse command
     [cmd_type, cmd_id, id_num] = parse_cmd(cmd, sensor, drive);
@@ -51,7 +51,7 @@ while ct
             case 'gyro'
                 reply = get_gyroscope(bot_center, bot_rot, sensor_pos);
             otherwise
-                error(strcat('cmd_id "', cmd_id,'" not recognized.'))
+                error(strcat('Command ID "', cmd_id,'" not recognized.'))
         end
         
     elseif cmd_type == 2

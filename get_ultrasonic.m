@@ -2,6 +2,11 @@ function [range] = get_ultrasonic(bot_center, bot_rot, sensor_pos, maze, plotmap
 %GET_ULTRASONIC Generates a simulated ultrasonic sensor reading
 %   Detailed explanation goes here
 
+% Constants
+ray_length = 108; % length of the ray to draw/check for intersection with walls
+fov = 10; % Field of view of the sensor, to be implemented later
+err = 1; % noise value for sensor in percent
+
 if ~exist('plotmap','var')
     plotmap = 0;
 end
@@ -12,10 +17,9 @@ origin = pos_update(bot_center, bot_rot, sensor_pos(1:2));
 % Determine sensor absolute orientation
 rot = sensor_pos(4) + bot_rot;
 
-% Draw line between the sensor and an arbitrary point 108 inches away.
-% This is slightly longer than the hypotenuse of the maze, so shouldn't be
-% range limited.
-ray = [origin; pos_update(origin, rot, [108,0])];
+% Draw line between the sensor and an arbitrary point. This should be
+% longer than the hypotenuse of the maze, so it's not range limited.
+ray = [origin; pos_update(origin, rot, [ray_length,0])];
 
 % Calculate all the intersection points
 [x,y] = intersections(ray(:,1), ray(:,2), maze(:,1), maze(:,2));
