@@ -8,7 +8,7 @@ maze = import_maze;
 checker = import_checker;
 
 % Build Robot
-bot_center = [6,42];
+bot_center = [6.5,43.5];
 bot_rot = -30;
 bot_perim = import_bot;
 bot_pos = pos_update(bot_center, bot_rot, bot_perim);
@@ -32,7 +32,7 @@ drive = import_drive;
 ct = 1;
 while ct
     % Listen for command from student algorithm
-    cmd = 'u1-1';
+    cmd = 'i1-1';
     
     % Parse command
     [cmd_type, cmd_id, id_num] = parse_cmd(cmd, sensor, drive);
@@ -41,9 +41,9 @@ while ct
         sensor_pos = [sensor.x(id_num), sensor.y(id_num), sensor.z(id_num), sensor.rot(id_num)];
         switch cmd_id
             case 'ultra'
-                reply = get_ultrasonic(bot_center, bot_rot, sensor_pos, maze);
+                reply = get_ultrasonic(bot_center, bot_rot, sensor_pos, maze, 1);
             case 'ir'
-                reply = get_ir(bot_center, bot_rot, sensor_pos);
+                reply = get_ir(bot_center, bot_rot, sensor_pos, checker, 1);
             case 'comp'
                 reply = get_compass(bot_center, bot_rot, sensor_pos);
             case 'odom'
@@ -83,6 +83,7 @@ xticks(0:12:96)
 yticks(0:12:48)
 
 % Robot
-fill(bot_pos(:,1),bot_pos(:,2), 'r')
+%fill(bot_pos(:,1),bot_pos(:,2), 'r')
+plot(bot_pos(:,1),bot_pos(:,2), 'k')
 
 % Sensors
