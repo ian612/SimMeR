@@ -3,7 +3,7 @@ function [direction] = get_compass(bot_center, bot_rot, sensor_pos)
 %   Detailed explanation goes here
 
 % Constants
-err_pct = 10; % noise value for sensor in percent
+pct_error = 0.1; % noise value for sensor (from 0 to 1)
 
 % Determine sensor absolute position
 origin = pos_update(bot_center, bot_rot, sensor_pos(1:2));
