@@ -28,7 +28,7 @@ end
 
 % Strip values from command
 cmd_char = cmd(1:2);
-cmd_data = str2double(cmd(3:end));
+cmd_data = str2double(cmd(4:end));
 id_num = 0;
 
 % Set cmd_type to default value of 0, in case it isn't found
@@ -51,7 +51,7 @@ end
 % Check if this is a drive command, but only if a sensor was not recognized
 if ~cmd_type
     for ct = 1:size(drive.char,1)
-        if cmd_char == drive.char{ct}(1)
+        if strcmp(cmd_char,drive.char{ct})
             cmd_type = 2;
             cmd_id = drive.id{ct};
             id_num = ct;

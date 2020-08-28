@@ -48,7 +48,7 @@ clc
 ct = 1;
 while ct
     % Listen for command from student algorithm
-    cmd = 'i1-1';
+    cmd = 'r1-45';
     
     % Parse command
     [cmd_type, cmd_id, cmd_data, id_num] = parse_cmd(cmd, sensor, drive);
@@ -76,7 +76,7 @@ while ct
         odom_pos = [sensor.x(odom(:,1)), sensor.y(odom(:,1)), sensor.z(odom(:,1)), sensor.rot(odom(:,1))];
         
         % Plan a path with segments for the robot to follow
-        movement = path_plan(cmd_id, cmd_data, bot_center, bot_rot, bot_perim, maze, drive);
+        movement = path_plan(cmd_id, cmd_data, drive);
         
         
         
