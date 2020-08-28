@@ -1,11 +1,10 @@
-function [pct_black] = get_ir(bot_center, bot_rot, sensor_pos, checker, plotmap)
+function [pct_black] = get_ir(bot_center, bot_rot, sensor_pos, pct_error, checker, plotmap)
 %GET_IR Returns the output of a simulated IR sensor
 %   Detailed explanation goes here
 
 % Constants
 fov = 40; % sensor full-width field of view
 num_pts = 121; % number of points in IR sensor view bounding circle
-pct_error = 0.05; % noise value for sensor (from 0 to 1)
 
 if ~exist('plotmap','var')
     plotmap = 0;

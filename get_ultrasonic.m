@@ -1,11 +1,10 @@
-function [range] = get_ultrasonic(bot_center, bot_rot, sensor_pos, maze, plotmap)
+function [range] = get_ultrasonic(bot_center, bot_rot, sensor_pos, pct_error, maze, plotmap)
 %GET_ULTRASONIC Generates a simulated ultrasonic sensor reading
 %   Detailed explanation goes here
 
 % Constants
 ray_length = 108; % length of the ray to draw/check for intersection with walls
 fov = 10; % Field of view of the sensor, to be implemented later
-pct_error = 0.02; % noise value for sensor (from 0 to 1)
 
 if ~exist('plotmap','var')
     plotmap = 0;

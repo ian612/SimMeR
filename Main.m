@@ -33,8 +33,8 @@ for ct = 1:size(sensor.id)
     end
 end
 
-gyro = [gyro_num', zeros(size(gyro_num))'];
-odom = [odom_num', zeros(size(odom_num))'];
+gyro = [gyro_num', sensor.err(gyro_num'), zeros(size(gyro_num))'];
+odom = [odom_num', sensor.err(odom_num'), zeros(size(odom_num))'];
 
 % Shuffle random number generator seed or set it statically
 rng('shuffle') % Use shuffled pseudorandom error generation
@@ -48,16 +48,17 @@ clc
 ct = 1;
 while ct
     % Listen for command from student algorithm
-    cmd = 'r1-45';
+    cmd = 'u1-45';
     
     % Parse command
     [cmd_type, cmd_id, cmd_data, id_num] = parse_cmd(cmd, sensor, drive);
     
     if cmd_type == 1
         sensor_pos = [sensor.x(id_num), sensor.y(id_num), sensor.z(id_num), sensor.rot(id_num)];
+        pct_error = sensor.err(id_num); % noise value for sensor (from 0 to 1)
         switch cmd_id
             case 'ultra'
-                reply = get_ultrasonic(bot_center, bot_rot, sensor_pos, maze, 1);
+                reply = get_ultrasonic(bot_center, bot_rot, sensor_pos, pct_error, maze, 1);
             case 'ir'
                 reply = get_ir(bot_center, bot_rot, sensor_pos, checker, 1);
             case 'comp'
@@ -78,34 +79,31 @@ while ct
         % Plan a path with segments for the robot to follow
         movement = path_plan(cmd_id, cmd_data, drive);
         
-        
-        
-        % Based on the command, add some error
-        switch cmd_id
-            case 'fwd'
-                w
-            case 'back'
-                s
-            case 'left'
-                a
-            case 'right'
-                d
-            case 'rot'
-                r
-            otherwise
-                error(strcat('Command ID "', cmd_id,'" not recognized.'))
+        % Move the robot along the path planned out
+        for ct = 1:size(movement,1)
+            % Rotate the robot
+            [bot_center, bot_rot, gyro, odom] = rotate_bot(movement(ct,4), bot_center, bot_rot, odom_pos, odom, gyro, sensor);
+            
+            % Move the robot
+            [bot_center, bot_rot, odom] = move_bot(movement(ct,2:3), bot_center, bot_rot, odom_pos, odom, sensor);
+            
+            % Update the robot position
+            bot_pos = pos_update(bot_center, bot_rot, bot_perim);
+            
+            % Check for any collisions with the maze
+            collision = check_collision(bot_pos, maze);
+            
+            % If there is a collision, throw an error and exit the program
+            if collision
+                error('The robot has collided with the wall! Simulation ended.')
+            end
+            
         end
-        
-        % Plan the robot's travel path based on the drive command and error
-        
         
         % Move the robot along the path, checking for collisions
         new_center = bot_center;
         new_rot = bot_rot;
         new_perim = bot_perim;
-        
-        % Make integral sensor measurements
-        
         
     else
         disp(strcat('Unrecognized command issued or sensor "',cmd(1:2),'" not found.'));

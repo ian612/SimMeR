@@ -31,6 +31,7 @@ sensor.x = sensor_raw{:,4};
 sensor.y = sensor_raw{:,5};
 sensor.z = sensor_raw{:,6};
 sensor.rot = sensor_raw{:,7};
+sensor.err = sensor_raw{:,8};
 
 % Plot the positions of the sensors on the robot if needed
 if plotmap == 1

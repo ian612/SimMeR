@@ -7,7 +7,7 @@ function [movement] = path_plan(cmd_id, cmd_data, drive)
 %   different function will convert the relative motion segments into
 %   the global coordinate system.
 %   
-%   movement is a matrix indicating how the robot should move on its path
+%   [movement] is a matrix indicating how the robot should move on its path
 %   to properly simulate the command given to it by the user, including
 %   errors. Each row indicated a movement action. Another function reads in
 %   this data, using it to move the robot in the simulated maze.
@@ -15,7 +15,7 @@ function [movement] = path_plan(cmd_id, cmd_data, drive)
 %   [id number, rotation, x distance, y distance]
 %   
 %   id number - the number of the movement
-%   rotation - rotation in degrees (always takes place before x-y movement
+%   rotation - rotation in degrees
 %   x distance - the x distance to move in inches
 %   y distance - the y distance to move in inches
 
