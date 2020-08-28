@@ -1,4 +1,4 @@
-ID,Poll Character,Enabled,On-Axis Error,Off-Axis Error,Rotation Error,On-Axis Bias,Off-Axis Bias,Rotation Bias
+ID,Poll Character,Enabled,Fwd-Back Error,Left-Right Error,Rotation Error,Y-Axis Bias,X-Axis Bias,Rotation Bias
 fwd,w1,1,0.01,0.01,0.01,0,0,0
 back,s1,1,0.01,0.01,0.01,0,0,0
 left,a1,1,0.01,0.01,0.01,0,0,0

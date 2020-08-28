@@ -16,12 +16,12 @@ drive_raw(~drive_mask,:) = [];
 % Sort the data into a structure
 drive.id = drive_raw{:,1};
 drive.char = drive_raw{:,2};
-drive.err_onaxis = drive_raw{:,4};
-drive.err_offaxis = drive_raw{:,5};
-drive.err_rotate = drive_raw{:,6};
-drive.bias_onaxis = drive_raw{:,7};
-drive.bis_offaxis = drive_raw{:,8};
-drive.bis_rotate = drive_raw{:,9};
+drive.err_y = drive_raw{:,4};
+drive.err_x = drive_raw{:,5};
+drive.err_r = drive_raw{:,6};
+drive.bias_y = drive_raw{:,7};
+drive.bias_x = drive_raw{:,8};
+drive.bias_r = drive_raw{:,9};
 
 end
 

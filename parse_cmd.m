@@ -1,4 +1,4 @@
-function [cmd_type, cmd_id, id_num] = parse_cmd(cmd,sensor,drive)
+function [cmd_type, cmd_id, cmd_data, id_num] = parse_cmd(cmd,sensor,drive)
 %PARSE_CMD determines what type of command has been issued to the robot
 %   This function checks the data stored in the sensor and drive structures
 %   to try to locate a match to the command issued by the student robot.
@@ -28,6 +28,7 @@ end
 
 % Strip values from command
 cmd_char = cmd(1:2);
+cmd_data = str2double(cmd(3:end));
 id_num = 0;
 
 % Set cmd_type to default value of 0, in case it isn't found

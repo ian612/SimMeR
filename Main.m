@@ -3,6 +3,8 @@ close all
 clc
 
 %% Initialization
+disp('Please wait while the simulation loads...')
+
 % Data Import
 maze = import_maze;
 checker = import_checker;
@@ -20,7 +22,19 @@ sensor = import_sensor;
 drive = import_drive;
 
 % Initialize integration-based sensor values
-% ------------------------------------------
+gyro_num = [];
+odom_num = [];
+for ct = 1:size(sensor.id)
+    if strcmp('gyro', sensor.id{ct}(1:end-1))
+        gyro_num = [gyro_num ct];
+    end
+    if strcmp('odom', sensor.id{ct}(1:end-1))
+        odom_num = [odom_num ct];
+    end
+end
+
+gyro = [gyro_num', zeros(size(gyro_num))'];
+odom = [odom_num', zeros(size(odom_num))'];
 
 % Shuffle random number generator seed or set it statically
 rng('shuffle') % Use shuffled pseudorandom error generation
@@ -30,13 +44,14 @@ rng('shuffle') % Use shuffled pseudorandom error generation
 % -----------------------------------
 
 %% Main Loop
+clc
 ct = 1;
 while ct
     % Listen for command from student algorithm
     cmd = 'i1-1';
     
     % Parse command
-    [cmd_type, cmd_id, id_num] = parse_cmd(cmd, sensor, drive);
+    [cmd_type, cmd_id, cmd_data, id_num] = parse_cmd(cmd, sensor, drive);
     
     if cmd_type == 1
         sensor_pos = [sensor.x(id_num), sensor.y(id_num), sensor.z(id_num), sensor.rot(id_num)];
@@ -56,11 +71,38 @@ while ct
         end
         
     elseif cmd_type == 2
+        
+        % Determine the position and rotation of any odometers
+        odom_pos = [sensor.x(odom(:,1)), sensor.y(odom(:,1)), sensor.z(odom(:,1)), sensor.rot(odom(:,1))];
+        
+        % Plan a path with segments for the robot to follow
+        movement = path_plan(cmd_id, cmd_data, bot_center, bot_rot, bot_perim, maze, drive);
+        
+        
+        
+        % Based on the command, add some error
+        switch cmd_id
+            case 'fwd'
+                w
+            case 'back'
+                s
+            case 'left'
+                a
+            case 'right'
+                d
+            case 'rot'
+                r
+            otherwise
+                error(strcat('Command ID "', cmd_id,'" not recognized.'))
+        end
+        
         % Plan the robot's travel path based on the drive command and error
         
         
         % Move the robot along the path, checking for collisions
-        
+        new_center = bot_center;
+        new_rot = bot_rot;
+        new_perim = bot_perim;
         
         % Make integral sensor measurements
         
