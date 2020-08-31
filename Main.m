@@ -47,11 +47,17 @@ rng('shuffle') % Use shuffled pseudorandom error generation
 
 %% Main Loop
 clc
-ct = 1;
-while ct
+lp = 1;
+while lp
     % Listen for command from student algorithm
     % cmd = 'u1-45';
     cmd = input('Please enter a command in the correct format: ', 's');
+    
+    % Refresh the plot
+    figure(1)
+    hold off
+    plot(0,0,'k')
+    hold on
     
     % Parse command
     [cmd_type, cmd_id, cmd_data, id_num] = parse_cmd(cmd, sensor, drive);
@@ -119,7 +125,6 @@ while ct
     % Robot
     fill(bot_pos(:,1),bot_pos(:,2), 'g')
     %plot(bot_pos(:,1),bot_pos(:,2), 'k')
-    hold on
     
     % Maze
     plot(checker(:,1),checker(:,2), 'b--')
@@ -140,7 +145,7 @@ while ct
         error('The robot has collided with the wall! Simulation ended.')
     end
     
-%     ct = 0;
+%     lp = 0;
     
 end
 

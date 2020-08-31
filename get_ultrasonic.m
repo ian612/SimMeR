@@ -31,7 +31,7 @@ range_pure = sqrt((origin(1) - x(1))^2 + (origin(2) - y(1))^2);
 range = add_error(range_pure,pct_error);
 
 if plotmap
-    figure()
+    figure(1)
     hold on
     plot(ray(:,1), ray(:,2), 'r')
     plot(origin(1), origin(2), 'b*')
