@@ -10,8 +10,8 @@ maze = import_maze;
 checker = import_checker;
 
 % Build Robot
-% bot_center = [9.5,40.5];
-bot_center = [0,0];
+bot_center = [9.5,40.5];
+% bot_center = [0,0];
 bot_rot = 0;
 bot_perim = import_bot;
 bot_pos = pos_update(bot_center, bot_rot, bot_perim);
@@ -67,9 +67,9 @@ while ct
             case 'comp'
                 reply = get_compass(bot_center, bot_rot, sensor_pos);
             case 'odom'
-                reply = get_odometer(bot_center, bot_rot, sensor_pos);
+                reply = get_odometer(odom, id_num);
             case 'gyro'
-                reply = get_gyroscope(bot_center, bot_rot, sensor_pos);
+                reply = get_gyroscope(gyro, id_num);
             otherwise
                 error(strcat('Command ID "', cmd_id,'" not recognized.'))
         end
@@ -83,6 +83,7 @@ while ct
         movement = path_plan(cmd_id, cmd_data, drive);
         
         % Move the robot along the path planned out
+        bot_trail = [];
         for ct = 1:size(movement,1)
             % Rotate the robot
             [bot_rot, odom, gyro] = rotate_bot(movement(ct,4), bot_rot, odom_pos, odom, gyro);
@@ -93,13 +94,15 @@ while ct
             % Update the robot position
             bot_pos = pos_update(bot_center, bot_rot, bot_perim);
             
-            % Check for any collisions with the maze
-            % collision = check_collision(bot_pos, maze);
+            % Create a movement path trail for the program to plot
+            bot_trail = [bot_trail; bot_center];
             
-            % If there is a collision, throw an error and exit the program
-            collision = 0;
+            % Check for any collisions with the maze
+            collision = check_collision(bot_pos, maze);
+            
+            % If there is a collision, end the movement loop
             if collision
-                error('The robot has collided with the wall! Simulation ended.')
+                break
             end
             
         end
@@ -120,16 +123,24 @@ while ct
     
     % Maze
     plot(checker(:,1),checker(:,2), 'b--')
-    plot(maze(:,1),maze(:,2), 'r')
+    plot(maze(:,1),maze(:,2), 'k', 'LineWidth', 2)
     xticks(0:12:96)
     yticks(0:12:48)
+    
+    % Robot Movement
+    plot(bot_trail(:,1), bot_trail(:,2), 'r*-')
     
     % Sensors
     
     
     hold off
     
-    ct = 0;
+    % If there is a collision, throw an error and exit the program
+    if collision
+        error('The robot has collided with the wall! Simulation ended.')
+    end
+    
+%     ct = 0;
     
 end
 
