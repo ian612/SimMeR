@@ -20,7 +20,7 @@ function [cmd_type, cmd_id, cmd_data, id_num] = parse_cmd(cmd,sensor,drive)
 %   rot   - rotate
 %   
 %   The output id_num is the sensor number to poll (corresponds to the row 
-%   number in the 'sensor' or 'drive' variable.
+%   number in the 'sensor' or 'drive' variable)
 
 if ~exist('cmd','var')
     cmd = 'w1-1';

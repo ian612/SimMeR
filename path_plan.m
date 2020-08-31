@@ -28,6 +28,11 @@ x = 0;
 y = 0;
 r = 0;
 
+% Check for valid data
+if isnan(cmd_data)
+    error(strcat('Command Data "', sprintf('%.2f',cmd_data),'" not valid. Ensure format is as follows - "a1-##".'))
+end
+    
 % Determine the new target position/rotation
 switch cmd_id
     case 'fwd'
