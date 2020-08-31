@@ -10,8 +10,9 @@ maze = import_maze;
 checker = import_checker;
 
 % Build Robot
-bot_center = [9.5,40.5];
-bot_rot = -30;
+% bot_center = [9.5,40.5];
+bot_center = [0,0];
+bot_rot = 0;
 bot_perim = import_bot;
 bot_pos = pos_update(bot_center, bot_rot, bot_perim);
 
@@ -33,6 +34,7 @@ for ct = 1:size(sensor.id)
     end
 end
 
+% Populate the gyroscope and odometer sensor variables
 gyro = [gyro_num', sensor.err(gyro_num'), zeros(size(gyro_num))'];
 odom = [odom_num', sensor.err(odom_num'), zeros(size(odom_num))'];
 
@@ -48,7 +50,8 @@ clc
 ct = 1;
 while ct
     % Listen for command from student algorithm
-    cmd = 'u1-45';
+    % cmd = 'u1-45';
+    cmd = input('Please enter a command in the correct format: ', 's');
     
     % Parse command
     [cmd_type, cmd_id, cmd_data, id_num] = parse_cmd(cmd, sensor, drive);
@@ -82,18 +85,19 @@ while ct
         % Move the robot along the path planned out
         for ct = 1:size(movement,1)
             % Rotate the robot
-            [bot_center, bot_rot, gyro, odom] = rotate_bot(movement(ct,4), bot_center, bot_rot, odom_pos, odom, gyro, sensor);
+            [bot_rot, odom, gyro] = rotate_bot(movement(ct,4), bot_rot, odom_pos, odom, gyro);
             
             % Move the robot
-            [bot_center, bot_rot, odom] = move_bot(movement(ct,2:3), bot_center, bot_rot, odom_pos, odom, sensor);
+            [bot_center, odom] = move_bot(movement(ct,2:3), bot_center, bot_rot, odom_pos, odom);
             
             % Update the robot position
             bot_pos = pos_update(bot_center, bot_rot, bot_perim);
             
             % Check for any collisions with the maze
-            collision = check_collision(bot_pos, maze);
+            % collision = check_collision(bot_pos, maze);
             
             % If there is a collision, throw an error and exit the program
+            collision = 0;
             if collision
                 error('The robot has collided with the wall! Simulation ended.')
             end
@@ -110,7 +114,10 @@ while ct
     end
     
     ct = 0;
+    
 end
+
+
 
 %% Testing plots
 figure(1)
