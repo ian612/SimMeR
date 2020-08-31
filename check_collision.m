@@ -13,7 +13,7 @@ function [collision] = check_collision(bot_pos, maze)
 %   defined clockwise. Only works with polygonal wall segments.
 %   
 %   Output
-%   collision - logical 1 if there is a collision, 0 if there is none
+%   collision - logical "1" if there is a collision, "0" if there is none
 
 % Determine if all robot points are still inside the maze
 collision1 = ~inpolygon(bot_pos(:,1), bot_pos(:,2), maze(:,1), maze(:,2));

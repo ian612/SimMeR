@@ -7,11 +7,11 @@ disp('Please wait while the simulation loads...')
 
 % Data Import
 maze = import_maze;
+maze_dim = [min(maze(:,1)), max(maze(:,1)), min(maze(:,2)), max(maze(:,2))];
 checker = import_checker;
 
 % Build Robot
 bot_center = [9.5,40.5];
-% bot_center = [0,0];
 bot_rot = 0;
 bot_perim = import_bot;
 bot_pos = pos_update(bot_center, bot_rot, bot_perim);
@@ -47,7 +47,13 @@ rng('shuffle') % Use shuffled pseudorandom error generation
 
 %% Main Loop
 clc
+
+% Initialization & Flags
+collision = 0;
+bot_trail = [];
 lp = 1;
+plot_robot = 1;
+
 while lp
     % Listen for command from student algorithm
     % cmd = 'u1-45';
@@ -69,9 +75,9 @@ while lp
             case 'ultra'
                 reply = get_ultrasonic(bot_center, bot_rot, sensor_pos, pct_error, maze, 1);
             case 'ir'
-                reply = get_ir(bot_center, bot_rot, sensor_pos, checker, 1);
+                reply = get_ir(bot_center, bot_rot, sensor_pos, pct_error, checker, 1);
             case 'comp'
-                reply = get_compass(bot_center, bot_rot, sensor_pos);
+                reply = get_compass(bot_center, bot_rot, sensor_pos, pct_error);
             case 'odom'
                 reply = get_odometer(odom, id_num);
             case 'gyro'
@@ -118,27 +124,32 @@ while lp
     end
     
     
-    %% Testing plots
-    figure(1)
-    axis equal
-    
-    % Robot
-    fill(bot_pos(:,1),bot_pos(:,2), 'g')
-    %plot(bot_pos(:,1),bot_pos(:,2), 'k')
-    
-    % Maze
-    plot(checker(:,1),checker(:,2), 'b--')
-    plot(maze(:,1),maze(:,2), 'k', 'LineWidth', 2)
-    xticks(0:12:96)
-    yticks(0:12:48)
-    
-    % Robot Movement
-    plot(bot_trail(:,1), bot_trail(:,2), 'r*-')
-    
-    % Sensors
-    
-    
-    hold off
+    % Plotting
+    if (plot_robot || collision)
+        figure(1)
+        axis equal
+        xlim(maze_dim(1:2))
+        ylim(maze_dim(3:4))
+
+        % Robot
+        robot = fill(bot_pos(:,1),bot_pos(:,2), 'g');
+        %plot(bot_pos(:,1),bot_pos(:,2), 'k')
+        set(robot,'facealpha',.5)
+
+        % Maze
+        plot(checker(:,1),checker(:,2), 'b--')
+        plot(maze(:,1),maze(:,2), 'k', 'LineWidth', 2)
+        xticks(0:12:96)
+        yticks(0:12:48)
+
+        % Robot Movement
+        if ~isempty(bot_trail)
+            plot(bot_trail(:,1), bot_trail(:,2), 'r*-')
+        end
+
+        % Allow plot to be refreshed
+        hold off
+    end
     
     % If there is a collision, throw an error and exit the program
     if collision
