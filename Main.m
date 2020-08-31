@@ -104,14 +104,30 @@ while ct
             
         end
         
-        % Move the robot along the path, checking for collisions
-        new_center = bot_center;
-        new_rot = bot_rot;
-        new_perim = bot_perim;
-        
     else
         disp(strcat('Unrecognized command issued or sensor "',cmd(1:2),'" not found.'));
     end
+    
+    
+    %% Testing plots
+    figure(1)
+    axis equal
+    
+    % Robot
+    fill(bot_pos(:,1),bot_pos(:,2), 'g')
+    %plot(bot_pos(:,1),bot_pos(:,2), 'k')
+    hold on
+    
+    % Maze
+    plot(checker(:,1),checker(:,2), 'b--')
+    plot(maze(:,1),maze(:,2), 'r')
+    xticks(0:12:96)
+    yticks(0:12:48)
+    
+    % Sensors
+    
+    
+    hold off
     
     ct = 0;
     
@@ -119,19 +135,3 @@ end
 
 
 
-%% Testing plots
-figure(1)
-hold on
-axis equal
-
-% Maze
-plot(checker(:,1),checker(:,2), 'b--')
-plot(maze(:,1),maze(:,2), 'k')
-xticks(0:12:96)
-yticks(0:12:48)
-
-% Robot
-%fill(bot_pos(:,1),bot_pos(:,2), 'r')
-plot(bot_pos(:,1),bot_pos(:,2), 'k')
-
-% Sensors
