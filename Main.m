@@ -42,22 +42,38 @@ odom = [odom_num', sensor.err(odom_num'), zeros(size(odom_num))'];
 rng('shuffle') % Use shuffled pseudorandom error generation
 % rng(0) % Use consistent pseudorandom error generation
 
-% Send go signal to student algorithm
-% -----------------------------------
-
-%% Main Loop
+% Clear loading message
 clc
 
-% Initialization & Flags
+% Loop Initialization & Flags
 collision = 0;
 bot_trail = [];
-lp = 1;
+sim = 1;
 plot_robot = 1;
 
-while lp
+% Initialize tcp server to read and respond to algorithm commands
+disp('Simulator initialized... waiting for connection from client')
+[s_cmd, s_rply] = tcp_setup('server', 9000, 9001);
+fopen(s_cmd);
+fopen(s_rply);
+
+clc
+disp('Client connected!')
+
+%% Main Loop
+
+% Simulator Loop
+while sim
     % Listen for command from student algorithm
     % cmd = 'u1-45';
-    cmd = input('Please enter a command in the correct format: ', 's');
+    % cmd = input('Please enter a command in the correct format: ', 's');
+    tcp_data = 0;
+    while ~tcp_data
+        if s_cmd.BytesAvailable > 0
+            cmd = char(fread(s_cmd, s_cmd.BytesAvailable, 'uint8'))';
+            tcp_data = 1;
+        end
+    end
     
     % Refresh the plot
     figure(1)
@@ -119,10 +135,14 @@ while lp
             
         end
         
+        % Use Inf to stand in for "movement complete"
+        reply = Inf;
+        
     else
         disp(strcat('Unrecognized command issued or sensor "',cmd(1:2),'" not found.'));
+        % Use NaN to stand in for "Unrecognized command"
+        reply = NaN;
     end
-    
     
     % Plotting
     if (plot_robot || collision)
@@ -149,16 +169,23 @@ while lp
 
         % Allow plot to be refreshed
         hold off
+        pause(0.5)
     end
+    
+    % Return the reply variable to the user algorithm
+    fwrite(s_rply, reply, 'double')
     
     % If there is a collision, throw an error and exit the program
     if collision
         error('The robot has collided with the wall! Simulation ended.')
     end
     
-%     lp = 0;
-    
 end
 
-
-
+% Bluetooth Loop
+if ~sim
+    
+    while ~sim
+        
+    end
+end
