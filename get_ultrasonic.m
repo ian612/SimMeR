@@ -3,7 +3,7 @@ function [range] = get_ultrasonic(bot_center, bot_rot, sensor_pos, pct_error, ma
 %   Detailed explanation goes here
 
 % Constants
-ray_length = [12,36,108]; % length of the ray(s) to draw/check for intersection with walls
+ray_length = [108]; % length of the ray(s) to draw/check for intersection with walls
 fov = 10; % Field of view of the sensor, to be implemented later
 num_angles = 5;
 ray_angles = linspace(-fov/2, fov/2, num_angles); % Determine how the field of view sees the ray
@@ -49,12 +49,16 @@ end
 
 
 % Determine the minimum r of the values there are
-[range_pure1,i1] = min(r_st);
-[range_pure2,i2] = min(range_pure1);
-ray = [origin; x_st(i1(i2),i2), y_st(i1(i2),i2)];
+[range_pure,i1] = min(r_st);
+if length(range_pure)>1
+    [range_pure,i2] = min(range_pure);
+else
+    i2 = 1;
+end
+ray = [origin; x_st(i2,i1(i2)), y_st(i2,i1(i2))];
 
 % Calculate the error and add it to the measurement
-range = add_error(range_pure2,pct_error);
+range = add_error(range_pure,pct_error);
 
 if plotmap
     figure(1)
