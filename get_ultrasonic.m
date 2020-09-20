@@ -49,13 +49,13 @@ end
 
 
 % Determine the minimum r of the values there are
-[range_pure,i1] = min(r_st);
+[range_pure,i] = min(r_st);
 if length(range_pure)>1
     [range_pure,i2] = min(range_pure);
+    ray = [origin; x_st(i(i2),i2), y_st(i(i2),i2)];
 else
-    i2 = 1;
+    ray = [origin; x_st(i), y_st(i)];
 end
-ray = [origin; x_st(i2,i1(i2)), y_st(i2,i1(i2))];
 
 % Calculate the error and add it to the measurement
 range = add_error(range_pure,pct_error);
