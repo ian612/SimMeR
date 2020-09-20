@@ -5,16 +5,25 @@ clc
 %% Initialization
 disp('Please wait while the simulation loads...')
 
+% Loop Initialization & Flags
+collision = 0;
+bot_trail = [];
+randomize = 1;  % Use either a random error generator (1) or consistent error generation (0)
+sim = 1;        % Use the simulator (1) or connect to robot via bluteooth (0)
+plot_robot = 1; % Plot the robot as it works its way through the maze
+step_time = 0.1;  % Pause time between the algorithm executing commands
+
 % Data Import
 maze = import_maze;
 maze_dim = [min(maze(:,1)), max(maze(:,1)), min(maze(:,2)), max(maze(:,2))];
 checker = import_checker;
 
 % Build Robot
-bot_center = [9.5,40.5];
+bot_center = [9.5,41];
 bot_rot = 0;
 bot_perim = import_bot;
 bot_pos = pos_update(bot_center, bot_rot, bot_perim);
+bot_front = [0.75*max(bot_perim(:,1)),0];
 
 % Import Sensor Loadout and Positions
 sensor = import_sensor; 
@@ -39,19 +48,14 @@ gyro = [gyro_num', sensor.err(gyro_num'), zeros(size(gyro_num))'];
 odom = [odom_num', sensor.err(odom_num'), zeros(size(odom_num))'];
 
 % Shuffle random number generator seed or set it statically
-rng('shuffle') % Use shuffled pseudorandom error generation
-% rng(0) % Use consistent pseudorandom error generation
-
-% Clear loading message
-clc
-
-% Loop Initialization & Flags
-collision = 0;
-bot_trail = [];
-sim = 1;
-plot_robot = 1;
+if randomize
+    rng('shuffle') % Use shuffled pseudorandom error generation
+else
+    rng(0) % Use consistent pseudorandom error generation
+end
 
 % Initialize tcp server to read and respond to algorithm commands
+clc  % Clear loading message
 disp('Simulator initialized... waiting for connection from client')
 [s_cmd, s_rply] = tcp_setup('server', 9000, 9001);
 fopen(s_cmd);
@@ -65,13 +69,14 @@ disp('Client connected!')
 % Simulator Loop
 while sim
     % Listen for command from student algorithm
-    % cmd = 'u1-45';
-    % cmd = input('Please enter a command in the correct format: ', 's');
+%     cmd = 'u1';
+%     cmd = input('Please enter a command in the correct format: ', 's');
     tcp_data = 0;
     while ~tcp_data
         if s_cmd.BytesAvailable > 0
             cmd = char(fread(s_cmd, s_cmd.BytesAvailable, 'uint8'))';
             tcp_data = 1;
+            disp(cmd)
         end
     end
     
@@ -155,7 +160,9 @@ while sim
         robot = fill(bot_pos(:,1),bot_pos(:,2), 'g');
         %plot(bot_pos(:,1),bot_pos(:,2), 'k')
         set(robot,'facealpha',.5)
-
+        nose = pos_update(bot_center, bot_rot, bot_front); % Robot "nose"
+        plot(nose(1), nose(2), 'k*')
+        
         % Maze
         plot(checker(:,1),checker(:,2), 'b--')
         plot(maze(:,1),maze(:,2), 'k', 'LineWidth', 2)
@@ -169,8 +176,10 @@ while sim
 
         % Allow plot to be refreshed
         hold off
-        pause(0.5)
     end
+    
+    % Wait before allowing the algorithm to continue
+    pause(step_time)
     
     % Return the reply variable to the user algorithm
     fwrite(s_rply, reply, 'double')

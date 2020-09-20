@@ -34,6 +34,11 @@ else
               -x/2, -y/2];
 end
 
+% Append a smaller version of the bot to indicate the front (x-direction)
+% indicator = 5;
+% tiny_xy = (bot_xy + ones(size(bot_xy,1),1) * [(indicator-1)*bot_params(2)/2,0]) / indicator;
+% bot_xy = [bot_xy; NaN NaN; flipud(tiny_xy); NaN NaN];
+
 if plotmap
     plot(bot_xy(:,1), bot_xy(:,2))
 end
