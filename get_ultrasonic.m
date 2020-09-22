@@ -1,13 +1,22 @@
-function [range] = get_ultrasonic(bot_center, bot_rot, sensor_pos, pct_error, maze, plotmap)
+function [range] = get_ultrasonic(bot_center, bot_rot, sensor_pos, pct_error, maze, firstrun, plotmap)
 %GET_ULTRASONIC Generates a simulated ultrasonic sensor reading
 %   Detailed explanation goes here
 
+% Define global plotting variables
+global ray_plot
+global rayend_plot
+
+
 % Constants
-ray_length = [108]; % length of the ray(s) to draw/check for intersection with walls
+ray_length = 108; % length of the ray(s) to draw/check for intersection with walls
 fov = 10; % Field of view of the sensor, to be implemented later
 num_angles = 5;
 ray_angles = linspace(-fov/2, fov/2, num_angles); % Determine how the field of view sees the ray
 
+% Set variables if not set by user
+if ~exist('firstrun','var')
+    firstrun = 1;
+end
 if ~exist('plotmap','var')
     plotmap = 0;
 end
@@ -61,10 +70,17 @@ end
 range = add_error(range_pure,pct_error);
 
 if plotmap
-    figure(1)
-    hold on
-    plot(ray(:,1), ray(:,2), 'r')
-    plot(ray(:,1), ray(:,2), 'ko')
+    if firstrun
+        figure(1)
+        ray_plot = plot(ray(:,1), ray(:,2), 'r');
+        rayend_plot = plot(ray(:,1), ray(:,2), 'ko');
+    else
+        ray_plot.XData = ray(:,1);
+        ray_plot.YData = ray(:,2);
+        rayend_plot.XData = ray(:,1);
+        rayend_plot.YData = ray(:,2);
+    end
 end
+
 end
 

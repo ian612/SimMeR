@@ -1,11 +1,20 @@
-function [pct_black] = get_ir(bot_center, bot_rot, sensor_pos, pct_error, checker, plotmap)
+function [pct_black] = get_ir(bot_center, bot_rot, sensor_pos, pct_error, checker, firstrun, plotmap)
 %GET_IR Returns the output of a simulated IR sensor
 %   Detailed explanation goes here
+
+% Define global plotting variables
+global ir_pts
+global ir_pts_in
+global ir_circle
 
 % Constants
 fov = 40; % sensor full-width field of view
 num_pts = 121; % number of points in IR sensor view bounding circle
 
+% Set variables if not set by user
+if ~exist('firstrun','var')
+    firstrun = 1;
+end
 if ~exist('plotmap','var')
     plotmap = 0;
 end
@@ -40,13 +49,20 @@ pct_black_pure = size(pts_in,1)/size(pts,1);
 pct_black = add_error(pct_black_pure, pct_error, [0,1]);
 
 if plotmap
-    figure(1)
-    hold on
-    plot(pts(:,1), pts(:,2), 'ro')
-    plot(origin(1), origin(2), 'b*')
-    plot(pts_in(:,1), pts_in(:,2), 'kx')
     circle_plot = circle + origin.*ones(size(circle));
-    plot(circle_plot(:,1), circle_plot(:,2), 'b')
+    if firstrun
+        figure(1)
+        ir_pts = plot(pts(:,1), pts(:,2), 'ro');
+        ir_pts_in = plot(pts_in(:,1), pts_in(:,2), 'kx');
+        ir_circle = plot(circle_plot(:,1), circle_plot(:,2), 'b');
+    else
+        ir_pts.XData = pts(:,1);
+        ir_pts.YData = pts(:,2);
+        ir_pts_in.XData = pts_in(:,1);
+        ir_pts_in.YData = pts_in(:,2);
+        ir_circle.XData = circle_plot(:,1);
+        ir_circle.YData = circle_plot(:,2);
+    end
 end
 end
 

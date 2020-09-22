@@ -8,8 +8,8 @@ fopen(s_cmd);
 fopen(s_rply);
 
 % Robot Sensor Measurements
-u = [0,0,0,0];  % Ultrasonic measurements
-pos = [0,0,0];  % Position (x,y,rotation)
+u = [0,0,0,0];    % Ultrasonic measurements
+pos = [0,0,0];      % Position (x,y,rotation)
 speed = 2;
 rot_stuck = 90;
 stepcount = 0;
@@ -22,8 +22,6 @@ while 1
         u(ct) = tcpclient_write(pollstr, s_cmd, s_rply);
     end
     disp(u)
-    
-    ir = tcpclient_write('i1', s_cmd, s_rply);
     
     % Pick random direction, left or right, to try travelling in
     direct_i = randperm(2,2)*2;

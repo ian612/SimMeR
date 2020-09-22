@@ -1,9 +1,17 @@
 clear
+clear global
 close all
 clc
 
 %% Initialization
 disp('Please wait while the simulation loads...')
+
+% Global Plotting Variables
+global ray_plot
+global rayend_plot
+global ir_pts
+global ir_pts_in
+global ir_circle
 
 % Loop Initialization & Flags
 collision = 0;
@@ -11,7 +19,11 @@ bot_trail = [];
 randomize = 1;  % Use either a random error generator (1) or consistent error generation (0)
 sim = 1;        % Use the simulator (1) or connect to robot via bluteooth (0)
 plot_robot = 1; % Plot the robot as it works its way through the maze
-step_time = 0.1;  % Pause time between the algorithm executing commands
+plot_sense = 1; % Plot sensor interactions with maze, if relevant
+step_time = 0;  % Pause time between the algorithm executing commands
+firstrun = 1;   % Run 
+firstULTRA = 1;
+firstIR = 1;
 
 % Data Import
 maze = import_maze;
@@ -26,7 +38,7 @@ bot_pos = pos_update(bot_center, bot_rot, bot_perim);
 bot_front = [0.75*max(bot_perim(:,1)),0];
 
 % Import Sensor Loadout and Positions
-sensor = import_sensor; 
+sensor = import_sensor;
 
 % Import Drive information
 drive = import_drive;
@@ -54,6 +66,21 @@ else
     rng(0) % Use consistent pseudorandom error generation
 end
 
+if plot_robot
+    % Create the plot
+    fig = figure(1);
+    axis equal
+    hold on
+    xlim(maze_dim(1:2))
+    ylim(maze_dim(3:4))
+
+    % Maze
+    checker_plot = plot_checker(checker);
+    plot(maze(:,1),maze(:,2), 'k', 'LineWidth', 2)
+    xticks(0:12:96)
+    yticks(0:12:48)
+end
+
 % Initialize tcp server to read and respond to algorithm commands
 clc  % Clear loading message
 disp('Simulator initialized... waiting for connection from client')
@@ -66,11 +93,14 @@ disp('Client connected!')
 
 %% Main Loop
 
-% Simulator Loop
 while sim
-    % Listen for command from student algorithm
-%     cmd = 'u1';
-%     cmd = input('Please enter a command in the correct format: ', 's');
+    
+    % Clear the Ultrasonic and IR sensor plots
+    if plot_sense
+        plot_clearsense(~firstULTRA, ~firstIR)
+    end
+    
+    % Receive data from the algorithm over the TCP socket
     tcp_data = 0;
     while ~tcp_data
         if s_cmd.BytesAvailable > 0
@@ -80,23 +110,20 @@ while sim
         end
     end
     
-    % Refresh the plot
-    figure(1)
-    hold off
-    plot(0,0,'k')
-    hold on
-    
     % Parse command
     [cmd_type, cmd_id, cmd_data, id_num] = parse_cmd(cmd, sensor, drive);
     
+    % If command is a sensor data request
     if cmd_type == 1
         sensor_pos = [sensor.x(id_num), sensor.y(id_num), sensor.z(id_num), sensor.rot(id_num)];
         pct_error = sensor.err(id_num); % noise value for sensor (from 0 to 1)
         switch cmd_id
             case 'ultra'
-                reply = get_ultrasonic(bot_center, bot_rot, sensor_pos, pct_error, maze, 1);
+                reply = get_ultrasonic(bot_center, bot_rot, sensor_pos, pct_error, maze, firstULTRA, plot_sense);
+                firstULTRA = 0;
             case 'ir'
-                reply = get_ir(bot_center, bot_rot, sensor_pos, pct_error, checker, 1);
+                reply = get_ir(bot_center, bot_rot, sensor_pos, pct_error, checker, firstIR, plot_sense);
+                firstIR = 0;
             case 'comp'
                 reply = get_compass(bot_center, bot_rot, sensor_pos, pct_error);
             case 'odom'
@@ -106,7 +133,8 @@ while sim
             otherwise
                 error(strcat('Command ID "', cmd_id,'" not recognized.'))
         end
-        
+    
+    % If command is a movement request
     elseif cmd_type == 2
         
         % Determine the position and rotation of any odometers
@@ -149,33 +177,37 @@ while sim
         reply = NaN;
     end
     
-    % Plotting
+    % After executing the requested command, plot the result
     if (plot_robot || collision)
-        figure(1)
-        axis equal
-        xlim(maze_dim(1:2))
-        ylim(maze_dim(3:4))
-
-        % Robot
-        robot = fill(bot_pos(:,1),bot_pos(:,2), 'g');
-        %plot(bot_pos(:,1),bot_pos(:,2), 'k')
-        set(robot,'facealpha',.5)
-        nose = pos_update(bot_center, bot_rot, bot_front); % Robot "nose"
-        plot(nose(1), nose(2), 'k*')
         
-        % Maze
-        plot(checker(:,1),checker(:,2), 'b--')
-        plot(maze(:,1),maze(:,2), 'k', 'LineWidth', 2)
-        xticks(0:12:96)
-        yticks(0:12:48)
-
+        % Robot
+        if firstrun
+            robot = patch(bot_pos(:,1),bot_pos(:,2), 'g');
+            set(robot,'facealpha',.5)
+        else
+            tmpx = bot_pos(:,1);
+            tmpy = bot_pos(:,2);
+            robot.XData = tmpx;
+            robot.YData = tmpy;
+        end
+        
+        % Robot "nose"
+        nose = pos_update(bot_center, bot_rot, bot_front);
+        if firstrun
+            robot_fwd = plot(nose(1), nose(2), 'k*');
+            robot_fwd.XDataSource = 'nose(1)';
+            robot_fwd.YDataSource = 'nose(2)';
+        end
+        
         % Robot Movement
         if ~isempty(bot_trail)
-            plot(bot_trail(:,1), bot_trail(:,2), 'r*-')
+            if ~exist('robot_trail', 'var')
+                robot_trail = plot(bot_trail(:,1), bot_trail(:,2), 'r*-');
+                robot_trail.XDataSource = 'bot_trail(:,1)';
+                robot_trail.YDataSource = 'bot_trail(:,2)';
+            end
         end
-
-        % Allow plot to be refreshed
-        hold off
+        refreshdata
     end
     
     % Wait before allowing the algorithm to continue
@@ -188,6 +220,9 @@ while sim
     if collision
         error('The robot has collided with the wall! Simulation ended.')
     end
+    
+    % If not the first run of the loop, set flag to 0
+    firstrun = 0;
     
 end
 
