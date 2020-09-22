@@ -35,12 +35,12 @@ end
     
 % Determine the new target position/rotation
 switch cmd_id
-    case 'fwd'
+    case 'up'
         y = cmd_data;
         x_err = [drive.bias_x(1) drive.err_x(1)];
         y_err = [drive.bias_y(1) drive.err_y(1)];
         r_err = [drive.bias_r(1) drive.err_r(1)];
-    case 'back'
+    case 'down'
         y = -cmd_data;
         x_err = [drive.bias_x(2) drive.err_x(2)];
         y_err = [drive.bias_y(2) drive.err_y(2)];

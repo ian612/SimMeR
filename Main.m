@@ -16,14 +16,15 @@ global ir_circle
 % Loop Initialization & Flags
 collision = 0;
 bot_trail = [];
-randomize = 1;  % Use either a random error generator (1) or consistent error generation (0)
+randerror = 1;  % Use either a random error generator (1) or consistent error generation (0)
+randbias = 0;   % Use a randomized, normally distributed set of drive biases
 sim = 1;        % Use the simulator (1) or connect to robot via bluteooth (0)
 plot_robot = 1; % Plot the robot as it works its way through the maze
 plot_sense = 1; % Plot sensor interactions with maze, if relevant
 step_time = 0;  % Pause time between the algorithm executing commands
-firstrun = 1;   % Run 
-firstULTRA = 1;
-firstIR = 1;
+firstrun = 1;   % Flag indicating if this is the first time through the loop
+firstULTRA = 1; % Flag indicating if an ultrasonic sensor has been used yet
+firstIR = 1;    % Flag indicating if an IR sensor has been used yet
 
 % Data Import
 maze = import_maze;
@@ -59,15 +60,22 @@ end
 gyro = [gyro_num', sensor.err(gyro_num'), zeros(size(gyro_num))'];
 odom = [odom_num', sensor.err(odom_num'), zeros(size(odom_num))'];
 
+%% Act on initialization flags
+
+% Randomize drive biases to verify algorithm robustness
+if randbias
+    drive = bias_randomize(drive);
+end
+
 % Shuffle random number generator seed or set it statically
-if randomize
+if randerror
     rng('shuffle') % Use shuffled pseudorandom error generation
 else
     rng(0) % Use consistent pseudorandom error generation
 end
 
+% Create the plot
 if plot_robot
-    % Create the plot
     fig = figure(1);
     axis equal
     hold on
@@ -81,7 +89,7 @@ if plot_robot
     yticks(0:12:48)
 end
 
-% Initialize tcp server to read and respond to algorithm commands
+%% Initialize tcp server to read and respond to algorithm commands
 clc  % Clear loading message
 disp('Simulator initialized... waiting for connection from client')
 [s_cmd, s_rply] = tcp_setup('server', 9000, 9001);
