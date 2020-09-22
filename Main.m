@@ -13,11 +13,12 @@ global ir_pts
 global ir_pts_in
 global ir_circle
 
-% Loop Initialization & Flags
+% Loop Variable Initialization & Flags
 collision = 0;
 bot_trail = [];
-randerror = 1;  % Use either a random error generator (1) or consistent error generation (0)
-randbias = 0;   % Use a randomized, normally distributed set of drive biases
+randerror = 1;	% Use either a random error generator (1) or consistent error generation (0)
+randbias = 0;	% Use a randomized, normally distributed set of drive biases
+strength = [0.03, 0.03, 0.03];  % How intense the drive bias is
 sim = 1;        % Use the simulator (1) or connect to robot via bluteooth (0)
 plot_robot = 1; % Plot the robot as it works its way through the maze
 plot_sense = 1; % Plot sensor interactions with maze, if relevant
@@ -62,16 +63,16 @@ odom = [odom_num', sensor.err(odom_num'), zeros(size(odom_num))'];
 
 %% Act on initialization flags
 
-% Randomize drive biases to verify algorithm robustness
-if randbias
-    drive = bias_randomize(drive);
-end
-
 % Shuffle random number generator seed or set it statically
 if randerror
     rng('shuffle') % Use shuffled pseudorandom error generation
 else
     rng(0) % Use consistent pseudorandom error generation
+end
+
+% Randomize drive biases to verify algorithm robustness
+if randbias
+    drive = bias_randomize(drive, strength);
 end
 
 % Create the plot
