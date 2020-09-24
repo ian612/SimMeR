@@ -1,4 +1,4 @@
-function [movement] = path_plan(cmd_id, cmd_data, drive)
+function [movement] = path_plan(cmd_id, cmd_data, drive, num_segments)
 %PATH_PLAN Plans a path for a robot to follow
 %   This function takes in data about the robot and maze and outputs a set
 %   of movements for the robot to follow. An ideal final position is
@@ -18,10 +18,6 @@ function [movement] = path_plan(cmd_id, cmd_data, drive)
 %   rotation - rotation in degrees
 %   x distance - the x distance to move in inches
 %   y distance - the y distance to move in inches
-
-
-% Constants
-num_segments = 10;
 
 % Preallocation of variables
 x = 0;

@@ -1,3 +1,4 @@
+%% Clean up workspace
 clear
 clear global
 close all
@@ -16,16 +17,17 @@ global ir_circle
 % Loop Variable Initialization & Flags
 collision = 0;
 bot_trail = [];
-randerror = 1;	% Use either a random error generator (1) or consistent error generation (0)
-randbias = 0;	% Use a randomized, normally distributed set of drive biases
-strength = [0.03, 0.03, 0.03];  % How intense the drive bias is
-sim = 1;        % Use the simulator (1) or connect to robot via bluteooth (0)
-plot_robot = 1; % Plot the robot as it works its way through the maze
-plot_sense = 1; % Plot sensor interactions with maze, if relevant
-step_time = 0;  % Pause time between the algorithm executing commands
-firstrun = 1;   % Flag indicating if this is the first time through the loop
-firstULTRA = 1; % Flag indicating if an ultrasonic sensor has been used yet
-firstIR = 1;    % Flag indicating if an IR sensor has been used yet
+randerror = 1;      % Use either a random error generator (1) or consistent error generation (0)
+randbias = 1;       % Use a randomized, normally distributed set of drive biases
+strength = [0.1, 0.2];    % How intense the drive bias is
+sim = 1;            % Use the simulator (1) or connect to robot via bluteooth (0)
+plot_robot = 1;     % Plot the robot as it works its way through the maze
+plot_sense = 1;     % Plot sensor interactions with maze, if relevant
+step_time = 0;      % Pause time between the algorithm executing commands
+firstrun = 1;       % Flag indicating if this is the first time through the loop
+firstULTRA = 1;     % Flag indicating if an ultrasonic sensor has been used yet
+firstIR = 1;        % Flag indicating if an IR sensor has been used yet
+num_segments = 10;  % Number of movement segments
 
 % Data Import
 maze = import_maze;
@@ -150,11 +152,19 @@ while sim
         odom_pos = [sensor.x(odom(:,1)), sensor.y(odom(:,1)), sensor.z(odom(:,1)), sensor.rot(odom(:,1))];
         
         % Plan a path with segments for the robot to follow
-        movement = path_plan(cmd_id, cmd_data, drive);
+        movement = path_plan(cmd_id, cmd_data, drive, 10);
         
         % Move the robot along the path planned out
-        bot_trail = [];
+        bot_trail = NaN*ones(size(movement,1),2);
         for ct = 1:size(movement,1)
+            
+            % Set "old position" variables
+            odom_old = odom;
+            gyro_old = gyro;
+            bot_rot_old = bot_rot;
+            bot_center_old = bot_center;
+            bot_pos_old = bot_pos;
+            
             % Rotate the robot
             [bot_rot, odom, gyro] = rotate_bot(movement(ct,4), bot_rot, odom_pos, odom, gyro);
             
@@ -165,14 +175,18 @@ while sim
             bot_pos = pos_update(bot_center, bot_rot, bot_perim);
             
             % Create a movement path trail for the program to plot
-            bot_trail = [bot_trail; bot_center];
+            bot_trail(ct,:) = bot_center;
             
             % Check for any collisions with the maze
             collision = check_collision(bot_pos, maze);
             
-            % If there is a collision, end the movement loop
+            % If there is a collision, reset to old position. Do NOT reset odometers
             if collision
-                break
+                gyro = gyro_old;
+                bot_rot = bot_rot_old;
+                bot_center = bot_center_old;
+                bot_pos = bot_pos_old;
+                bot_trail(ct,:) = [NaN NaN];
             end
             
         end
@@ -225,17 +239,12 @@ while sim
     % Return the reply variable to the user algorithm
     fwrite(s_rply, reply, 'double')
     
-    % If there is a collision, throw an error and exit the program
-    if collision
-        error('The robot has collided with the wall! Simulation ended.')
-    end
-    
     % If not the first run of the loop, set flag to 0
     firstrun = 0;
     
 end
 
-% Bluetooth Loop
+%% Bluetooth Loop
 if ~sim
     
     while ~sim
