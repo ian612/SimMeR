@@ -30,7 +30,7 @@ firstIR = 1;        % Flag indicating if an IR sensor has been used yet
 % Constants
 num_segments = 10;  % Number of movement segments
 blocksize = 3;      % Block side length in inches
-strength = [0.1, 0.2];    % How intense the random drive bias is, if enabled
+strength = [0.05, 1];	% How intense the random drive bias is, if enabled
 
 % Data Import
 maze = import_maze;
@@ -140,12 +140,14 @@ while sim
     if cmd_type == 1
         sensor_pos = [sensor.x(id_num), sensor.y(id_num), sensor.z(id_num), sensor.rot(id_num)];
         pct_error = sensor.err(id_num); % noise value for sensor (from 0 to 1)
+        fov = sensor.fov(id_num);
+        threshold = sensor.thr(id_num);
         switch cmd_id
             case 'ultra'
-                reply = get_ultrasonic(bot_center, bot_rot, sensor_pos, pct_error, maze, block, firstULTRA, plot_sense);
+                reply = get_ultrasonic(bot_center, bot_rot, sensor_pos, pct_error, fov, maze, block, firstULTRA, plot_sense);
                 firstULTRA = 0;
             case 'ir'
-                reply = get_ir(bot_center, bot_rot, sensor_pos, pct_error, checker, firstIR, plot_sense);
+                reply = get_ir(bot_center, bot_rot, sensor_pos, pct_error, fov, threshold, checker, firstIR, plot_sense);
                 firstIR = 0;
             case 'comp'
                 reply = get_compass(bot_center, bot_rot, sensor_pos, pct_error);

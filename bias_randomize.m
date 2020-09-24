@@ -7,7 +7,7 @@ if ~exist('drive','var')
     load('drive.mat');
 end
 if ~exist('strength','var')
-    strength = [0.02, 0.02];
+    strength = [0.05, 0.05];
 end
 
 % Movement biases
@@ -21,7 +21,7 @@ end
 ct = length(drive.bias_x);
 drive.bias_x(ct,1) = randn * strength(2) / 360;
 drive.bias_y(ct,1) = randn * strength(2) / 360;
-drive.bias_r(ct,1) = randn * strength(2);
+drive.bias_r(ct,1) = randn * strength(2) / 360;
 
 end
 

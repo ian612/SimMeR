@@ -1,4 +1,4 @@
-function [pct_black] = get_ir(bot_center, bot_rot, sensor_pos, pct_error, checker, firstrun, plotmap)
+function [black] = get_ir(bot_center, bot_rot, sensor_pos, pct_error, fov, threshold, checker, firstrun, plotmap)
 %GET_IR Returns the output of a simulated IR sensor
 %   Detailed explanation goes here
 
@@ -8,7 +8,6 @@ global ir_pts_in
 global ir_circle
 
 % Constants
-fov = 40; % sensor full-width field of view
 num_pts = 121; % number of points in IR sensor view bounding circle
 
 % Set variables if not set by user
@@ -47,6 +46,13 @@ pct_black_pure = size(pts_in,1)/size(pts,1);
 
 % Calculate the error and add it to the measurement
 pct_black = add_error(pct_black_pure, pct_error, [0,1]);
+
+% Determine if this is above the threshold for "black" or "white"
+if pct_black >= threshold
+    black = 1;
+else
+    black = 0;
+end
 
 if plotmap
     circle_plot = circle + origin.*ones(size(circle));
