@@ -19,7 +19,6 @@ collision = 0;
 bot_trail = [];
 randerror = 1;      % Use either a random error generator (1) or consistent error generation (0)
 randbias = 1;       % Use a randomized, normally distributed set of drive biases
-strength = [0.1, 0.2];    % How intense the drive bias is
 sim = 1;            % Use the simulator (1) or connect to robot via bluteooth (0)
 plot_robot = 1;     % Plot the robot as it works its way through the maze
 plot_sense = 1;     % Plot sensor interactions with maze, if relevant
@@ -27,12 +26,20 @@ step_time = 0;      % Pause time between the algorithm executing commands
 firstrun = 1;       % Flag indicating if this is the first time through the loop
 firstULTRA = 1;     % Flag indicating if an ultrasonic sensor has been used yet
 firstIR = 1;        % Flag indicating if an IR sensor has been used yet
+
+% Constants
 num_segments = 10;  % Number of movement segments
+blocksize = 3;      % Block side length in inches
+strength = [0.1, 0.2];    % How intense the random drive bias is, if enabled
 
 % Data Import
 maze = import_maze;
 maze_dim = [min(maze(:,1)), max(maze(:,1)), min(maze(:,2)), max(maze(:,2))];
 checker = import_checker;
+
+% Build Block
+block_center = [25,41];
+block = build_block(blocksize, block_center);
 
 % Build Robot
 bot_center = [9.5,41];
@@ -90,6 +97,11 @@ if plot_robot
     plot(maze(:,1),maze(:,2), 'k', 'LineWidth', 2)
     xticks(0:12:96)
     yticks(0:12:48)
+    
+    % Block
+    block_plot = patch(block(:,1),block(:,2), 'y');
+    set(block_plot,'facealpha',.5)
+    
 end
 
 %% Initialize tcp server to read and respond to algorithm commands
@@ -130,7 +142,7 @@ while sim
         pct_error = sensor.err(id_num); % noise value for sensor (from 0 to 1)
         switch cmd_id
             case 'ultra'
-                reply = get_ultrasonic(bot_center, bot_rot, sensor_pos, pct_error, maze, firstULTRA, plot_sense);
+                reply = get_ultrasonic(bot_center, bot_rot, sensor_pos, pct_error, maze, block, firstULTRA, plot_sense);
                 firstULTRA = 0;
             case 'ir'
                 reply = get_ir(bot_center, bot_rot, sensor_pos, pct_error, checker, firstIR, plot_sense);

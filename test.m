@@ -17,7 +17,7 @@ stepcount = 0;
 while 1
     
     % Take Measurements
-    for ct = 1:4
+    for ct = 1:5
         pollstr = strcat('u',num2str(ct));
         u(ct) = tcpclient_write(pollstr, s_cmd, s_rply);
     end

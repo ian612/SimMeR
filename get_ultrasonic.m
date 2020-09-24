@@ -1,4 +1,4 @@
-function [range] = get_ultrasonic(bot_center, bot_rot, sensor_pos, pct_error, maze, firstrun, plotmap)
+function [range] = get_ultrasonic(bot_center, bot_rot, sensor_pos, pct_error, maze, block, firstrun, plotmap)
 %GET_ULTRASONIC Generates a simulated ultrasonic sensor reading
 %   Detailed explanation goes here
 
@@ -31,6 +31,11 @@ rot = sensor_pos(4) + bot_rot;
 x_st = zeros(length(ray_length), length(ray_angles));
 y_st = zeros(length(ray_length), length(ray_angles));
 r_st = ones(length(ray_length), length(ray_angles))*Inf;
+
+% If sensor is lower than the block, append block to maze
+if sensor_pos(3) <= abs(block(1,1)-block(2,1))
+    maze = [maze;block];
+end
 
 for ct = 1:length(ray_length)
     for ct2 = 1:length(ray_angles)
