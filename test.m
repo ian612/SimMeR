@@ -8,7 +8,7 @@ fopen(s_cmd);
 fopen(s_rply);
 
 % Robot Sensor Measurements
-u = [0,0,0,0];  % Ultrasonic measurements
+u = [0,0,0,0,0];  % Ultrasonic measurements
 pos = [0,0,0];  % Position (x,y,rotation)
 speed = 2;
 rot_stuck = 90;

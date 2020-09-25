@@ -14,7 +14,6 @@ function [pos] = pos_update(origin, rot, pos_relative)
 
 % Rotate vector
 pos = rotation(pos_relative, rot);
-pos = ones(size(pos_relative)).*origin + pos;
+pos = repmat(origin, size(pos_relative,1), 1) + pos;
 
 end
-

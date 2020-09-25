@@ -17,15 +17,16 @@ global ir_circle
 % Loop Variable Initialization & Flags
 collision = 0;
 bot_trail = [];
+firstrun = 1;       % Flag indicating if this is the first time through the loop
+firstULTRA = 1;     % Flag indicating if an ultrasonic sensor has been used yet
+firstIR = 1;        % Flag indicating if an IR sensor has been used yet
+
 randerror = 1;      % Use either a random error generator (1) or consistent error generation (0)
 randbias = 1;       % Use a randomized, normally distributed set of drive biases
 sim = 1;            % Use the simulator (1) or connect to robot via bluteooth (0)
 plot_robot = 1;     % Plot the robot as it works its way through the maze
 plot_sense = 1;     % Plot sensor interactions with maze, if relevant
 step_time = 0;      % Pause time between the algorithm executing commands
-firstrun = 1;       % Flag indicating if this is the first time through the loop
-firstULTRA = 1;     % Flag indicating if an ultrasonic sensor has been used yet
-firstIR = 1;        % Flag indicating if an IR sensor has been used yet
 
 % Constants
 num_segments = 10;  % Number of movement segments
@@ -166,7 +167,7 @@ while sim
         odom_pos = [sensor.x(odom(:,1)), sensor.y(odom(:,1)), sensor.z(odom(:,1)), sensor.rot(odom(:,1))];
         
         % Plan a path with segments for the robot to follow
-        movement = path_plan(cmd_id, cmd_data, drive, 10);
+        movement = path_plan(cmd_id, cmd_data, drive, num_segments);
         
         % Move the robot along the path planned out
         bot_trail = NaN*ones(size(movement,1),2);
