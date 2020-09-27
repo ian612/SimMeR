@@ -3,10 +3,9 @@ clear
 clear global
 close all
 clc
-
-%% Initialization
 disp('Please wait while the simulation loads...')
 
+%% Plotting Variable Initialization
 % Global Plotting Variables
 global ray_plot
 global rayend_plot
@@ -14,13 +13,8 @@ global ir_pts
 global ir_pts_in
 global ir_circle
 
-% Loop Variable Initialization & Flags
-collision = 0;
-bot_trail = [];
-firstrun = 1;       % Flag indicating if this is the first time through the loop
-firstULTRA = 1;     % Flag indicating if an ultrasonic sensor has been used yet
-firstIR = 1;        % Flag indicating if an IR sensor has been used yet
-
+%% User-editable variables and flags
+% Control Flags and Setup
 randerror = 1;      % Use either a random error generator (1) or consistent error generation (0)
 randbias = 1;       % Use a randomized, normally distributed set of drive biases
 sim = 1;            % Use the simulator (1) or connect to robot via bluteooth (0)
@@ -29,9 +23,14 @@ plot_sense = 1;     % Plot sensor interactions with maze, if relevant
 step_time = 0;      % Pause time between the algorithm executing commands
 
 % Constants
+bot_center = [9.5,41];  % Robot starting location
+bot_rot = 0;            % Robot starting rotation
 num_segments = 10;  % Number of movement segments
 blocksize = 3;      % Block side length in inches
 strength = [0.05, 1];	% How intense the random drive bias is, if enabled
+block_center = [25,41]; % Block starting location
+
+%% Data Import
 
 % Data Import
 maze = import_maze;
@@ -39,12 +38,9 @@ maze_dim = [min(maze(:,1)), max(maze(:,1)), min(maze(:,2)), max(maze(:,2))];
 checker = import_checker;
 
 % Build Block
-block_center = [25,41];
 block = build_block(blocksize, block_center);
 
 % Build Robot
-bot_center = [9.5,41];
-bot_rot = 0;
 bot_perim = import_bot;
 bot_pos = pos_update(bot_center, bot_rot, bot_perim);
 bot_front = [0.75*max(bot_perim(:,1)),0];
@@ -117,6 +113,13 @@ clc
 disp('Client connected!')
 
 %% Main Loop
+
+% Loop Variable Initialization
+collision = 0;
+bot_trail = [];
+firstrun = 1;       % Flag indicating if this is the first time through the loop
+firstULTRA = 1;     % Flag indicating if an ultrasonic sensor has been used yet
+firstIR = 1;        % Flag indicating if an IR sensor has been used yet
 
 while sim
     
