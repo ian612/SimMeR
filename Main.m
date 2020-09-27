@@ -95,6 +95,7 @@ if plot_robot
 
     % Maze
     checker_plot = plot_checker(checker);
+    maze_plot = plot_checker(maze(7:end,:), 'k', 1);
     plot(maze(:,1),maze(:,2), 'k', 'LineWidth', 2)
     xticks(0:12:96)
     yticks(0:12:48)
