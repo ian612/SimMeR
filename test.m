@@ -21,9 +21,26 @@ while 1
         pollstr = strcat('u',num2str(ct));
         u(ct) = tcpclient_write(pollstr, s_cmd, s_rply);
     end
-    disp(u)
     
     ir = tcpclient_write('i1', s_cmd, s_rply);
+    
+    odom = tcpclient_write('o3', s_cmd, s_rply);
+    
+    gyro = tcpclient_write('g1', s_cmd, s_rply);
+    
+    comp = tcpclient_write('c1', s_cmd, s_rply);
+    
+    % Display Values
+    disp('Ultrasonic')
+    disp(u)
+    disp('IR Sensor')
+    disp(ir)
+    disp('Odometer')
+    disp(odom)
+    disp('Gyroscope')
+    disp(gyro)
+    disp('Compass')
+    disp(comp)
     
     % Pick random direction, left or right, to try travelling in
     direct_i = randperm(2,2)*2;
