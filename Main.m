@@ -128,7 +128,7 @@ while sim
         plot_clearsense(~firstULTRA, ~firstIR)
     end
     
-    % Receive data from the algorithm over the TCP socket
+    % Receive data from the algorithm over a TCP socket
     cmd = tcpserver_read(s_cmd);
     
     % Parse command
