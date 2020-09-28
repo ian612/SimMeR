@@ -1,6 +1,12 @@
 function [checker_plot] = plot_checker(checker, color, transp)
 %PLOT_CHECKER Plots the checkerboard
 %   Intakes the NaN-separated checkerboard squares, plots them as a patch
+%   
+%   Copyright (c) 2020, Ian G. Bennett
+%   All rights reserved.
+%   Development funded by the University of Toronto, Department of
+%   Mechanical and Industrial Engineering.
+%   Distributed under GNU AGPLv3 license.
 
 if ~exist('checker', 'var')
     load('checker.mat')

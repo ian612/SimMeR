@@ -1,3 +1,9 @@
+% Copyright (c) 2020, Ian G. Bennett
+% All rights reserved.
+% Development funded by the University of Toronto, Department of Mechanical
+% and Industrial Engineering.
+% Distributed under GNU AGPLv3 license.
+
 %% Clean up workspace
 clear
 clear global
@@ -112,7 +118,7 @@ fopen(s_rply);
 clc
 disp('Client connected!')
 
-%% Main Loop
+%% Simulator Main Loop
 
 % Loop Variable Initialization
 collision = 0;
@@ -256,7 +262,7 @@ while sim
     
 end
 
-%% Bluetooth Loop
+%% Bluetooth Main Loop
 if ~sim
     
     while ~sim

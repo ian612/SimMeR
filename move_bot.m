@@ -17,6 +17,12 @@ function [bot_center, odom] = move_bot(pos, bot_center, bot_rot, odom_pos, odom)
 %   Outputs
 %   bot_center - updated global position of the robot
 %   odom - same as above, value updated using this function
+%   
+%   Copyright (c) 2020, Ian G. Bennett
+%   All rights reserved.
+%   Development funded by the University of Toronto, Department of
+%   Mechanical and Industrial Engineering.
+%   Distributed under GNU AGPLv3 license.
 
 
 % Update the odometer value (working in the local coordinate system)

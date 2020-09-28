@@ -18,6 +18,12 @@ function [bot_rot, odom, gyro] = rotate_bot(angle, bot_rot, odom_pos, odom, gyro
 %   bot_rot - updated actual orientation angle of the robot
 %   gyro - same as above, value updated using this function
 %   odom - same as above, value updated using this function
+%   
+%   Copyright (c) 2020, Ian G. Bennett
+%   All rights reserved.
+%   Development funded by the University of Toronto, Department of
+%   Mechanical and Industrial Engineering.
+%   Distributed under GNU AGPLv3 license.
 
 % Update the odometer value (working in the local coordinate system)
 if ~isempty(odom)

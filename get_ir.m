@@ -1,6 +1,12 @@
 function [black] = get_ir(bot_center, bot_rot, sensor_pos, pct_error, fov, threshold, checker, firstrun, plotmap)
 %GET_IR Returns the output of a simulated IR sensor
 %   Detailed explanation goes here
+%   
+%   Copyright (c) 2020, Ian G. Bennett
+%   All rights reserved.
+%   Development funded by the University of Toronto, Department of
+%   Mechanical and Industrial Engineering.
+%   Distributed under GNU AGPLv3 license.
 
 % Define global plotting variables
 global ir_pts

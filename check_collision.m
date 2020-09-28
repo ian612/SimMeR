@@ -14,6 +14,12 @@ function [collision] = check_collision(bot_pos, maze)
 %   
 %   Output
 %   collision - logical "1" if there is a collision, "0" if there is none
+%   
+%   Copyright (c) 2020, Ian G. Bennett
+%   All rights reserved.
+%   Development funded by the University of Toronto, Department of
+%   Mechanical and Industrial Engineering.
+%   Distributed under GNU AGPLv3 license.
 
 % Determine if all robot points are still inside the maze
 collision1 = ~inpolygon(bot_pos(:,1), bot_pos(:,2), maze(:,1), maze(:,2));

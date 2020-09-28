@@ -11,6 +11,12 @@ function [pos] = pos_update(origin, rot, pos_relative)
 %   
 %   The relative position (pos_relative) should be a matrix with each row
 %   containing a set of coordinates [x, y].
+%   
+%   Copyright (c) 2020, Ian G. Bennett
+%   All rights reserved.
+%   Development funded by the University of Toronto, Department of
+%   Mechanical and Industrial Engineering.
+%   Distributed under GNU AGPLv3 license.
 
 % Rotate vector
 pos = rotation(pos_relative, rot);

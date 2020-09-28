@@ -7,6 +7,14 @@ function [value_noisy] = add_error(value, pct_error, bounds)
 %   bounds is an optional two-value vector that can be added to specify
 %   limits to the returned values. For example, if bounds is [0 1], values
 %   will be limited to those within the given values
+%   
+%   Copyright (c) 2020, Ian G. Bennett
+%   All rights reserved.
+%   Development funded by the University of Toronto, Department of
+%   Mechanical and Industrial Engineering.
+%   Distributed under GNU AGPLv3 license.
+
+
 
 err = randn * pct_error * value;
 value_noisy = value + err;

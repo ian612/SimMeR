@@ -1,7 +1,13 @@
 function [sensor] = import_sensor(bot_perim, fname, plotmap)
 %IMPORT_SENSOR Imports the sensor loadout
 %   This function reads the sensor csv file and loads the provided
-%   information into the program. Data is stored in a 1x1 structure called
+%   information into the program. Data is stored in a 1x1 structure
+%   
+%   Copyright (c) 2020, Ian G. Bennett
+%   All rights reserved.
+%   Development funded by the University of Toronto, Department of
+%   Mechanical and Industrial Engineering.
+%   Distributed under GNU AGPLv3 license.
 
 if ~exist('bot_perim','var')
     bot_perim = [-6, -6; ...

@@ -18,6 +18,12 @@ function [movement] = path_plan(cmd_id, cmd_data, drive, num_segments)
 %   rotation - rotation in degrees
 %   x distance - the x distance to move in inches
 %   y distance - the y distance to move in inches
+%   
+%   Copyright (c) 2020, Ian G. Bennett
+%   All rights reserved.
+%   Development funded by the University of Toronto, Department of
+%   Mechanical and Industrial Engineering.
+%   Distributed under GNU AGPLv3 license.
 
 % Preallocation of variables
 x = 0;

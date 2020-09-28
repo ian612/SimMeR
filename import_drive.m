@@ -1,6 +1,12 @@
 function [drive] = import_drive(fname)
 %IMPORT_DRIVE Imports the drive information from a .csv file
-%   This sensor 
+%   Detailed description goes here
+%   
+%   Copyright (c) 2020, Ian G. Bennett
+%   All rights reserved.
+%   Development funded by the University of Toronto, Department of
+%   Mechanical and Industrial Engineering.
+%   Distributed under GNU AGPLv3 license.
 
 if ~exist('fname','var')
     fname = 'drive.csv';

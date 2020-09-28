@@ -1,6 +1,12 @@
 function [bot_xy] = import_bot(fname, plotmap)
 %IMPORT_BOT imports and defines robot perimeter coordinates
 %   Detailed explanation goes here
+%   
+%   Copyright (c) 2020, Ian G. Bennett
+%   All rights reserved.
+%   Development funded by the University of Toronto, Department of
+%   Mechanical and Industrial Engineering.
+%   Distributed under GNU AGPLv3 license.
 
 if ~exist('fname','var')
     fname = 'robot.csv';

@@ -21,6 +21,12 @@ function [cmd_type, cmd_id, cmd_data, id_num] = parse_cmd(cmd,sensor,drive)
 %   
 %   The output id_num is the sensor number to poll (corresponds to the row 
 %   number in the 'sensor' or 'drive' variable)
+%   
+%   Copyright (c) 2020, Ian G. Bennett
+%   All rights reserved.
+%   Development funded by the University of Toronto, Department of
+%   Mechanical and Industrial Engineering.
+%   Distributed under GNU AGPLv3 license.
 
 if ~exist('cmd','var')
     cmd = 'w1-1';

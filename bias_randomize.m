@@ -1,6 +1,12 @@
 function [drive] = bias_randomize(drive, strength)
 %BIAS_RANDOMIZE generates randomized drive biases
-%   This function is NOT optimized, don't use it yet
+%   Detailed description goes here
+%   
+%   Copyright (c) 2020, Ian G. Bennett
+%   All rights reserved.
+%   Development funded by the University of Toronto, Department of
+%   Mechanical and Industrial Engineering.
+%   Distributed under GNU AGPLv3 license.
 
 % Set variables if not set by function call
 if ~exist('drive','var')
