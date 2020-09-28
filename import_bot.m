@@ -1,5 +1,5 @@
 function [bot_xy] = import_bot(fname, plotmap)
-%IMPORT_BOT Summary of this function goes here
+%IMPORT_BOT imports and defines robot perimeter coordinates
 %   Detailed explanation goes here
 
 if ~exist('fname','var')
@@ -20,7 +20,7 @@ end
 
 if ~bot_params(1)
     d = bot_params(2);
-    th = 0:pi/20:2*pi;
+    th = fliplr(0:pi/20:2*pi);
     x = d/2 * cos(th);
     y = d/2 * sin(th);
     bot_xy = [x',y'];
@@ -33,11 +33,6 @@ else
                x/2, -y/2; ...
               -x/2, -y/2];
 end
-
-% Append a smaller version of the bot to indicate the front (x-direction)
-% indicator = 5;
-% tiny_xy = (bot_xy + ones(size(bot_xy,1),1) * [(indicator-1)*bot_params(2)/2,0]) / indicator;
-% bot_xy = [bot_xy; NaN NaN; flipud(tiny_xy); NaN NaN];
 
 if plotmap
     plot(bot_xy(:,1), bot_xy(:,2))
