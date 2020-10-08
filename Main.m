@@ -36,6 +36,10 @@ sim = 1;                % Use the simulator (1) or connect to robot via blueteoo
 plot_robot = 1;         % Plot the robot as it works its way through the maze
 plot_sense = 1;         % Plot sensor interactions with maze, if relevant
 
+% Bluetooth Serial Connection Constants
+comport_num = 6;        % Bluetooth serial comport number to connect to 
+comport_baud = 9600;    % Bluetooth serial baudrate
+
 %% Data Import
 
 % Data Import
@@ -255,7 +259,7 @@ while sim
     pause(step_time)
     
     % Return the reply variable to the user algorithm
-    fwrite(s_rply, reply, 'double')
+    fwrite(s_rply, reply, 'single')
     
     % If not the first run of the loop, set flag to 0
     firstrun = 0;
@@ -264,8 +268,11 @@ end
 
 %% Bluetooth Main Loop
 if ~sim
+
+% Initialize the bluetooth serial port
+b_com = serialport(comport_num, comport_baud);
+
+while ~sim
     
-    while ~sim
-        
-    end
+end
 end

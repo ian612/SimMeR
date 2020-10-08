@@ -13,7 +13,7 @@ fwrite(s_cmd, cmd, 'uint8')
 ct = 1;
 while ct
     if s_rply.BytesAvailable > 0
-        reply = fread(s_rply, s_rply.BytesAvailable/8, 'double');
+        reply = fread(s_rply, s_rply.BytesAvailable/4, 'single');
         ct = 0;
     end
 end
