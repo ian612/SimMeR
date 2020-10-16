@@ -1,3 +1,5 @@
+% SimMeR version 0.2
+%
 % Copyright (c) 2020, Ian G. Bennett
 % All rights reserved.
 % Development funded by the University of Toronto, Department of Mechanical
