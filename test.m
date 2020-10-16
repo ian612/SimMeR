@@ -24,17 +24,17 @@ while 1
     
     % Take Measurements
     for ct = 1:5
-        cmdstring = strcat('u',num2str(ct));
+        cmdstring = [strcat('u',num2str(ct)) newline];
         u(ct) = tcpclient_write(cmdstring, s_cmd, s_rply);
     end
     
-    ir = tcpclient_write('i1', s_cmd, s_rply);
+    ir = tcpclient_write(['i1' newline], s_cmd, s_rply);
     
-    odom = tcpclient_write('o3', s_cmd, s_rply);
+    odom = tcpclient_write(['o3' newline], s_cmd, s_rply);
     
-    gyro = tcpclient_write('g1', s_cmd, s_rply);
+    gyro = tcpclient_write(['g1' newline], s_cmd, s_rply);
     
-    comp = tcpclient_write('c1', s_cmd, s_rply);
+    comp = tcpclient_write(['c1' newline], s_cmd, s_rply);
     
     % Display Values
     disp('Ultrasonic')
@@ -56,23 +56,23 @@ while 1
         if  (u(1) > 4) && (u(2) > 1.5) && (u(4) > 1.5)
             
             % If the way ahead is clear, go forward
-            cmdstring = strcat('d1-',num2str(speed));             % Build command string to move bot
+            cmdstring = [strcat('d1-',num2str(speed)) newline];             % Build command string to move bot
             reply = tcpclient_write(cmdstring, s_cmd, s_rply);
             break
             
         elseif u(direct_i(ct)) > 4
             
             % If not, pick a random direction that is clear and go that way
-            cmdstring = strcat('r1-',num2str(direct(ct)));  % Build command string to rotate bot
+            cmdstring = [strcat('r1-',num2str(direct(ct))) newline];  % Build command string to rotate bot
             reply = tcpclient_write(cmdstring, s_cmd, s_rply);
             
-            cmdstring = strcat('d1-',num2str(speed));             % Build command string to move bot
+            cmdstring = [strcat('d1-',num2str(speed)) newline];             % Build command string to move bot
             reply = tcpclient_write(cmdstring, s_cmd, s_rply);
             break
         elseif ct == 2
             
             % If no directions clear, turn to the left
-            cmdstring = strcat('r1-',num2str(rot_stuck));    % Rotate if stuck
+            cmdstring = [strcat('r1-',num2str(rot_stuck)) newline];    % Rotate if stuck
             reply = tcpclient_write(cmdstring, s_cmd, s_rply);
             
         end

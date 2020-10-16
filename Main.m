@@ -141,6 +141,9 @@ while sim
     % Receive data from the algorithm over a TCP socket
     cmd = tcpserver_read(s_cmd);
     
+    % Remove the 'newline' character at the end of the character string
+    cmd = cmd(1:end-1);
+    
     % Parse command
     [cmd_type, cmd_id, cmd_data, id_num] = parse_cmd(cmd, sensor, drive);
     
@@ -273,6 +276,8 @@ if ~sim
 b_com = serialport(comport_num, comport_baud);
 
 while ~sim
+    
+    
     
 end
 end
